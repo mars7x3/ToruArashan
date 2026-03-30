@@ -28,6 +28,9 @@ class Animal(models.Model):
     popular_line = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
                                related_name='popular_lines')
 
+    class Meta:
+        ordering = ('-id',)
+
 
 class Measurement(models.Model):
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE, related_name='measurements')
@@ -37,6 +40,12 @@ class Measurement(models.Model):
     head_length = models.FloatField()
     body_length = models.FloatField()
     ear_length = models.FloatField()
+
+
+class MeasurementFile(models.Model):
+    measurement = models.ForeignKey(Measurement, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='measurements')
+
 
 
 class Vaccination(models.Model):

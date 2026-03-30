@@ -31,10 +31,18 @@ class AnimalListSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'unicode', 'category_info', 'birthday', 'image')
 
 
+class MeasurementFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MeasurementFile
+        fields = ('id', 'file')
+
+
 class MeasurementSerializer(serializers.ModelSerializer):
+    files = MeasurementFileSerializer(many=True, read_only=True)
+
     class Meta:
         model = Measurement
-        fields = ('id', 'date', 'weight', 'height', 'head_length', 'body_length', 'ear_length')
+        fields = ('id', 'date', 'weight', 'height', 'head_length', 'body_length', 'ear_length', 'files')
 
 
 class VaccinationSerializer(serializers.ModelSerializer):

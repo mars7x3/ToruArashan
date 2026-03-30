@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from main_app.models import Animal, Measurement, Vaccination
+from main_app.models import Animal, Measurement, Vaccination, MeasurementFile
 from main_app.permissions import IsOwner
 from main_app.serializers import MeInfoSerializer, AnimalCRUDSerializer, AnimalListSerializer, \
     VaccinationCRUDSerializer, MeasurementCRUDSerializer, \
@@ -42,7 +44,7 @@ class AnimalModelViewSet(viewsets.ModelViewSet):
                 'father__category',
                 'popular_line__category',
             )
-            .prefetch_related('measurements', 'vaccinations')
+            .prefetch_related('measurements__files', 'vaccinations')
         )
 
     def perform_create(self, serializer):
@@ -70,6 +72,12 @@ class VaccinationModelViewSet(viewsets.ModelViewSet):
 class AnimalTimelineView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(name='date_from', type=OpenApiTypes.DATE, location=OpenApiParameter.QUERY),
+            OpenApiParameter(name='date_to', type=OpenApiTypes.DATE, location=OpenApiParameter.QUERY),
+        ]
+    )
     def get(self, request):
         date_from = request.query_params.get('date_from')
         date_to = request.query_params.get('date_to')
@@ -95,3 +103,21 @@ class AnimalTimelineView(generics.GenericAPIView):
             'measurements': TimelineMeasurementSerializer(measurements, many=True).data,
             'vaccinations': TimelineVaccinationSerializer(vaccinations, many=True).data,
         })
+
+
+class CreateFileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        files = request.FILES.getlist('files')
+        measurement = request.data.get('measurement')
+        if not Measurement.objects.get(id=measurement).animal.author == request.user:
+            return Response(
+                {'error': 'Permission denied'},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        data = [MeasurementFile(measurement_id=measurement, file=file) for file in files]
+        MeasurementFile.objects.bulk_create(data)
+        return Response("Success!", status=status.HTTP_201_CREATED)
+
+
