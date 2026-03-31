@@ -28,7 +28,7 @@ class AnimalListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Animal
-        fields = ('id', 'name', 'unicode', 'category_info', 'birthday', 'image')
+        fields = ('id', 'name', 'unicode', 'category_info', 'birthday', 'image', 'gender')
 
 
 class MeasurementFileSerializer(serializers.ModelSerializer):
