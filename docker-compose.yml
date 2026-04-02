@@ -28,6 +28,23 @@ services:
     networks:
       - db_network2
 
+  nginx2:
+    build:
+      context: .
+      dockerfile: ./nginx.Dockerfile
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web2
+    networks:
+      - app_network2
+
+
 
 volumes:
   static_volume2:

@@ -26,10 +26,10 @@ urlpatterns = [
              path('schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
              path('token/access/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-            path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+             path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-            path('me/info/', MeInfoView.as_view()),
-            path('timeline/', AnimalTimelineView.as_view()),
+             path('me/info/', MeInfoView.as_view()),
+             path('timeline/', AnimalTimelineView.as_view()),
              path('measurement/file/create', CreateFileView.as_view()),
 
             path('', include(router.urls)),
