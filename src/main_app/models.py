@@ -6,7 +6,7 @@ from main_app.enums import GenderEnum, VaccinationStatusEnum
 
 
 class MyUser(AbstractUser):
-    pass
+    device_token = models.CharField(max_length=255, blank=True, null=True)
 
 
 class Category(models.Model):

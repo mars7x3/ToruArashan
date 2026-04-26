@@ -121,3 +121,16 @@ class CreateFileView(APIView):
         return Response("Success!", status=status.HTTP_201_CREATED)
 
 
+class DeviceTokenCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        device_token = request.data.get('device_token')
+        if not device_token:
+            return Response(
+                {'error': 'device_token is required'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        request.user.device_token = device_token
+        request.user.save()
+        return Response("Device token updated successfully", status=status.HTTP_200_OK)

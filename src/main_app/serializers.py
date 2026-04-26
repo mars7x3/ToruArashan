@@ -6,7 +6,7 @@ from main_app.models import *
 class MeInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = MyUser
-        fields = ('first_name', 'last_name', 'username')
+        fields = ('first_name', 'last_name', 'username', 'device_token')
 
 
 class CategorySerializer(serializers.ModelSerializer):

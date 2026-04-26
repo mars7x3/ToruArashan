@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from conf import settings
 from main_app.views import MeInfoView, AnimalModelViewSet, MeasurementModelViewSet, VaccinationModelViewSet, \
-    AnimalTimelineView, CreateFileView
+    AnimalTimelineView, CreateFileView, DeviceTokenCreateView
 
 router = DefaultRouter()
 
@@ -31,6 +31,8 @@ urlpatterns = [
              path('me/info/', MeInfoView.as_view()),
              path('timeline/', AnimalTimelineView.as_view()),
              path('measurement/file/create', CreateFileView.as_view()),
+             path('device-token/create', DeviceTokenCreateView.as_view()),
+
 
             path('', include(router.urls)),
         ])
